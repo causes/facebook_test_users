@@ -15,6 +15,10 @@ module FacebookTestUsers
     def self.create!(attrs)
       new_guy = new(attrs)
 
+      if all.find {|app| app.name == new_guy.name }
+        raise ArgumentError, "App names must be unique, and there is already an app named \"#{new_guy.name}\"."
+      end
+
       DB.update do |data|
         data[:apps] ||= []
         data[:apps] << new_guy.attrs
@@ -22,22 +26,26 @@ module FacebookTestUsers
     end
 
     def self.all
-      DB[:apps].map {|attrs| new(attrs) }
+      if DB[:apps]
+        DB[:apps].map {|attrs| new(attrs) }
+      else
+        []
+      end
     end
 
     private
 
     def validate!
       unless name && name =~ /\S/
-        raise "App name must not be empty"
+        raise ArgumentError, "App name must not be empty"
       end
 
       unless id && id =~ /^[0-9a-f]+$/i
-        raise "App id must be a nonempty hex string"
+        raise ArgumentError, "App id must be a nonempty hex string"
       end
 
       unless secret && secret =~ /^[0-9a-f]+$/i
-        raise "App secret must be a nonempty hex string"
+        raise ArgumentError, "App secret must be a nonempty hex string"
       end
     end
 

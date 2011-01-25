@@ -51,6 +51,6 @@ RSpec.configure do |config|
 
   config.before(:each) do
     @fbtu_dotfile = Tempfile.new('fbtu-prefs')
-    ENV['FBTU_DOTFILE'] = @fbtu_dotfile.path
+    FacebookTestUsers::DB.filename = @fbtu_dotfile.path
   end
 end

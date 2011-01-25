@@ -16,7 +16,7 @@ module FacebookTestUsers
 
       def update
         @cached_yaml = nil
-        data = YAML.load_file(filename) || {}
+        data = _yaml
         yield data
 
         # do this *before* blowing away the db
@@ -24,15 +24,25 @@ module FacebookTestUsers
         File.open(filename, 'w') { |f| f.write(data_as_yaml) }
       end
 
+      def filename
+        @filename || File.join(ENV['HOME'], '.fbturc')
+      end
+
+      def filename=(f)
+        @cached_yaml = nil
+        @filename = f
+      end
+
       private
 
       def yaml
-        @cached_yaml ||= YAML.load_file(filename)
+        @cached_yaml ||= _yaml
       end
 
-      def filename
-        ENV['FBTU_DOTFILE'] || File.join(ENV['HOME'], '.fbturc')
+      def _yaml
+        YAML.load_file(filename) || {}
       end
+
     end
   end
 end

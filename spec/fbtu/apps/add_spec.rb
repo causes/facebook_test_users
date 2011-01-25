@@ -21,6 +21,16 @@ describe "fbtu apps add" do
     end.should raise_error
   end
 
-  it "won't let you add an app without a name"
-  it "won't let you add an app with a duplicate name"
+  it "won't let you add an app without a name" do
+    lambda do
+      fbtu %w[apps add --app-id 123456 --app-secret 123456]
+    end.should raise_error
+  end
+
+  it "won't let you add an app with a duplicate name" do
+    fbtu %w[apps add --app-id 123456 --app-secret 7890 --name hydrogen]
+    lambda do
+      fbtu %w[apps add --app-id 123456 --app-secret 7890 --name hydrogen]
+    end.should raise_error
+  end
 end
