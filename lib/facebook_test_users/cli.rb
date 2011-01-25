@@ -8,16 +8,16 @@ module FacebookTestUsers
       check_unknown_options!
       def self.exit_on_failure?() true end
 
+      default_task :list
+
       desc "add", "Tell fbtu about a new application (must already exist on FB)"
       method_option "app_id", :type => :string, :required => true, :banner => "OpenGraph ID of the app"
       method_option "app_secret", :type => :string, :required => true, :banner => "App's secret key"
       method_option "name", :type => :string, :required => true, :banner => "Name of the app (so you don't have to remember its ID)"
-
       def add
         FacebookTestUsers::App.create!(:name => options[:name], :id => options[:app_id], :secret => options[:app_secret])
         list
       end
-      
 
       desc "list", "List the applications fbtu knows about"
       def list

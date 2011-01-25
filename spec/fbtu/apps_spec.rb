@@ -6,4 +6,12 @@ describe "fbtu apps" do
       fbtu %w[apps somecrap]
     end.should raise_error
   end
+
+  it "defaults to listing apps" do
+    fbtu %w[apps add --name shlomo --app-id 12345 --app-secret abcdef]
+    fbtu %w[apps]
+    @out.should include("shlomo")
+    @out.should include("12345")
+  end
+
 end
