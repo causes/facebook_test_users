@@ -6,9 +6,7 @@ describe "fbtu users list" do
     FakeWeb.register_uri(:get,
       'https://graph.facebook.com/oauth/access_token?client_id=123456&client_secret=abcdef&grant_type=client_credentials',
       :body => 'access_token=doublesecret')
-  end
 
-  it "lists available users" do
     user_data = {
       "data" => [{
           "id" => 74040,
@@ -25,6 +23,9 @@ describe "fbtu users list" do
       'https://graph.facebook.com/123456/accounts/test-users?access_token=doublesecret',
       :body => user_data.to_json)
 
+  end
+
+  it "lists available users" do
     fbtu %w[users list --app alpha]
     @out.should include("74040")
     @out.should include("https://facebook.example.com/login/74040")
@@ -32,5 +33,10 @@ describe "fbtu users list" do
     @out.should include("78767")
   end
 
-  it "does something reasonable when the app doesn't exist"
+  it "does something reasonable when the app doesn't exist" do
+    lambda do
+      fbtu %w[users list --app omega], :quiet => true
+    end.should raise_error
+    @err.should include("Unknown app")
+  end
 end

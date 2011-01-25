@@ -34,9 +34,17 @@ module FacebookTestUsers
           :access_token => access_token
         })
 
-      @users ||= JSON[users_data]["data"].map do |user_data|
+      JSON[users_data]["data"].map do |user_data|
         User.new(user_data)
       end
+    end
+
+    def create_user
+      user_data = RestClient.post(users_url,
+        :access_token => access_token,
+        :installed => true)
+
+      User.new(JSON[user_data])
     end
 
     ## query methods

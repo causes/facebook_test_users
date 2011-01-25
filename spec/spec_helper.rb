@@ -38,10 +38,10 @@ module FBTU
             ]
           end
           raise e      # always propagate failure up the stack
+        ensure
+          @out = @out.string
+          @err = @err.string
         end
-
-        @out = @out.string
-        @err = @err.string
       end
       
       def capture_stdout_into(io)

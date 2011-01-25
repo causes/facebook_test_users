@@ -36,17 +36,42 @@ module FacebookTestUsers
       method_option "app", :aliases => %w[-a], :type => :string, :required => true, :banner => "Name of the app"
 
       def list
-        app = App.find_by_name(options[:app])
-        unless app
-          puts "Unknown app #{options[:app]}. Write good text here."
+        app = find_app!(options[:app])
+        if app.users.any?
+          shell.print_table([
+              ['User ID', 'Access Token', 'Login URL'],
+              *(app.users.map do |user|
+                  [user.id, user.access_token, user.login_url]
+                end)
+            ])
+        else
+          puts "App #{app.name} has no users."
         end
+      end
+
+      desc "add", "Add a test user to an application"
+      method_option "app", :aliases => %w[-a], :type => :string, :required => true, :banner => "Name of the app"
+
+      def add
+        app = find_app!(options[:app])
+        user = app.create_user
         shell.print_table([
             ['User ID', 'Access Token', 'Login URL'],
-            *(app.users.map do |user|
-                [user.id, user.access_token, user.login_url]
-              end)
+            [user.id, user.access_token, user.login_url]
           ])
       end
+
+      private
+      def find_app!(name)
+        app = App.find_by_name(options[:app])
+        unless app
+          $stderr.puts "Unknown app #{options[:app]}."
+          $stderr.puts "Run '#{banner_base} apps' to see known apps."
+          raise ArgumentError, "No such app"
+        end
+        app
+      end
+
     end # Users
 
     check_unknown_options!
