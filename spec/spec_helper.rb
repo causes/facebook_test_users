@@ -15,8 +15,7 @@ module FBTU
 
     end
 
-    # Methods used in examples (e.g. it "works" {...})
-    module ExampleMethods
+    module CliTestMethods
       def fbtu(argv_ish)
         @out = capture_stdout do
           @err = capture_stderr do
@@ -41,12 +40,13 @@ module FBTU
         $stderr = STDERR
       end
 
-    end
+    end # CliTestMethods
+
   end
 end
 
 RSpec.configure do |config|
-  config.include FBTU::SpecHelpers::ExampleMethods
+  config.include FBTU::SpecHelpers::CliTestMethods
   config.extend  FBTU::SpecHelpers::SemanticNames
 
   config.before(:each) do
