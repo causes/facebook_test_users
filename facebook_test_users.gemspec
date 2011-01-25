@@ -6,11 +6,14 @@ Gem::Specification.new do |s|
   s.name        = "facebook_test_users"
   s.version     = FacebookTestUsers::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["TODO: Write your name"]
-  s.email       = ["TODO: Write your email address"]
-  s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.authors     = ["Sam Merritt"]
+  s.email       = ["spam@andcheese.org"]
+  s.homepage    = "https://github.com/smerritt/facebook_test_users"
+  s.summary     = %q{A CLI tool + library for manipulating Facebook test users}
+  s.description =
+    "Test users are extremely handy for testing your Facebook applications. This gem " +
+    "lets you create and delete users and make them befriend one another. " +
+    "It is intended to make testing your Facebook applications slightly less painful."
 
   s.rubyforge_project = "facebook_test_users"
 
@@ -18,4 +21,6 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
+
+  s.add_dependency 'rest-client', '~> 1.6.1'
 end
