@@ -32,11 +32,11 @@ module FacebookTestUsers
         raise "App name must not be empty"
       end
 
-      unless id && id =~ /^[0-9a-z]+$/i
+      unless id && id =~ /^[0-9a-f]+$/i
         raise "App id must be a nonempty hex string"
       end
 
-      unless secret && secret =~ /^[0-9a-z]+$/i
+      unless secret && secret =~ /^[0-9a-f]+$/i
         raise "App secret must be a nonempty hex string"
       end
     end
