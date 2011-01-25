@@ -1,5 +1,9 @@
+require 'json'
+
 module FacebookTestUsers
   class App
+
+    GRAPH_API_BASE = "https://graph.facebook.com"
 
     attr_reader :name, :id, :secret
     
@@ -25,6 +29,17 @@ module FacebookTestUsers
       end
     end
 
+    def users
+      users_data = RestClient.get(users_url, :params => {
+          :access_token => access_token
+        })
+
+      @users ||= JSON[users_data]["data"].map do |user_data|
+        User.new(user_data)
+      end
+    end
+
+    ## query methods
     def self.all
       if DB[:apps]
         DB[:apps].map {|attrs| new(attrs) }
@@ -33,7 +48,19 @@ module FacebookTestUsers
       end
     end
 
+    def self.find_by_name(name)
+      all.find {|a| a.name == name}
+    end
+
     private
+
+    def users_url
+      GRAPH_API_BASE + "/#{id}/accounts/test-users"
+    end
+
+    def access_token
+      @access_token ||= AccessToken.get(id, secret)
+    end
 
     def validate!
       unless name && name =~ /\S/

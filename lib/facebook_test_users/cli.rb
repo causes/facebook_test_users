@@ -21,17 +21,41 @@ module FacebookTestUsers
 
       desc "list", "List the applications fbtu knows about"
       def list
-        FacebookTestUsers::App.all.each do |app|
+        App.all.each do |app|
           puts "#{app.name} (id: #{app.id})"
         end
       end
 
-    end
+    end # Apps
+
+    class Users < Thor
+      check_unknown_options!
+      def self.exit_on_failure?() true end
+
+      desc "list", "List available test users for an application"
+      method_option "app", :aliases => %w[-a], :type => :string, :required => true, :banner => "Name of the app"
+
+      def list
+        app = App.find_by_name(options[:app])
+        unless app
+          puts "Unknown app #{options[:app]}. Write good text here."
+        end
+        shell.print_table([
+            ['User ID', 'Access Token', 'Login URL'],
+            *(app.users.map do |user|
+                [user.id, user.access_token, user.login_url]
+              end)
+          ])
+      end
+    end # Users
 
     check_unknown_options!
     def self.exit_on_failure?() true end
 
     desc "apps", "Commands for managing FB applications"
     subcommand :apps, FacebookTestUsers::CLI::Apps
+
+    desc "apps", "Commands for managing FB applications' test users"
+    subcommand :users, FacebookTestUsers::CLI::Users
   end
 end
