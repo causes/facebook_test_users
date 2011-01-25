@@ -40,7 +40,11 @@ module FacebookTestUsers
       end
 
       def _yaml
-        YAML.load_file(filename) || {}
+        if File.exist?(filename)
+          YAML.load_file(filename) || {}
+        else
+          {}
+        end
       end
 
     end

@@ -55,10 +55,27 @@ module FacebookTestUsers
       def add
         app = find_app!(options[:app])
         user = app.create_user
-        shell.print_table([
-            ['User ID', 'Access Token', 'Login URL'],
-            [user.id, user.access_token, user.login_url]
-          ])
+        puts "User ID:      #{user.id}"
+        puts "Access Token: #{user.access_token}"
+        puts "Login URL:    #{user.login_url}"
+      end
+
+      desc "rm", "Remove a test user from an application"
+      method_option "app", :aliases => %w[-a], :type => :string, :required => true, :banner => "Name of the app"
+      method_option "user", :banner => "ID of the user to remove", :aliases => %w[-u], :type => :string, :required => true
+
+      def rm
+        app = find_app!(options[:app])
+        user = app.users.find do |user|
+          user.id.to_s == options[:user].to_s
+        end
+
+        if user
+          user.destroy
+        else
+          $stderr.write("Unknown user '#{options[:user]}'")
+          raise ArgumentError, "No such user"
+        end
       end
 
       private
@@ -66,7 +83,7 @@ module FacebookTestUsers
         app = App.find_by_name(options[:app])
         unless app
           $stderr.puts "Unknown app #{options[:app]}."
-          $stderr.puts "Run '#{banner_base} apps' to see known apps."
+          $stderr.puts "Run 'fbtu apps' to see known apps."
           raise ArgumentError, "No such app"
         end
         app

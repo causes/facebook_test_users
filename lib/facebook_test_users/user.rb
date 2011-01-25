@@ -1,3 +1,5 @@
+require 'uri'
+
 module FacebookTestUsers
   class User
 
@@ -11,7 +13,14 @@ module FacebookTestUsers
       end
     end
 
+    def destroy
+      RestClient.delete(destroy_url)
+    end
+
+    private
+
+    def destroy_url
+      GRAPH_API_BASE + "/#{id}?access_token=#{URI.escape(access_token.to_s)}"
+    end
   end
 end
-
-    

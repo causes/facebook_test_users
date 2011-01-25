@@ -4,5 +4,5 @@ require 'facebook_test_users/db'
 require 'facebook_test_users/user'
 
 module FacebookTestUsers
-
+  GRAPH_API_BASE = "https://graph.facebook.com"
 end

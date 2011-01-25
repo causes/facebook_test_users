@@ -3,8 +3,6 @@ require 'json'
 module FacebookTestUsers
   class App
 
-    GRAPH_API_BASE = "https://graph.facebook.com"
-
     attr_reader :name, :id, :secret
     
     def initialize(attrs)

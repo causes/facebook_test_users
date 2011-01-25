@@ -11,26 +11,26 @@ describe "fbtu apps add" do
 
   it "won't let you add an app with a bogus ID" do
     lambda do
-      fbtu %w[apps add --app-id xyzzy --app-secret 7890 --name hydrogen]
+      fbtu %w[apps add --app-id xyzzy --app-secret 7890 --name hydrogen], :quiet => true
     end.should raise_error
   end
 
   it "won't let you add an app with a bogus secret" do
     lambda do
-      fbtu %w[apps add --app-id 123456 --app-secret xyzzy --name hydrogen]
+      fbtu %w[apps add --app-id 123456 --app-secret xyzzy --name hydrogen], :quiet => true
     end.should raise_error
   end
 
   it "won't let you add an app without a name" do
     lambda do
-      fbtu %w[apps add --app-id 123456 --app-secret 123456]
+      fbtu %w[apps add --app-id 123456 --app-secret 123456], :quiet => true
     end.should raise_error
   end
 
   it "won't let you add an app with a duplicate name" do
     fbtu %w[apps add --app-id 123456 --app-secret 7890 --name hydrogen]
     lambda do
-      fbtu %w[apps add --app-id 123456 --app-secret 7890 --name hydrogen]
+      fbtu %w[apps add --app-id 123456 --app-secret 7890 --name hydrogen], :quiet => true
     end.should raise_error
   end
 end
