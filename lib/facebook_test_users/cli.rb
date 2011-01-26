@@ -78,6 +78,14 @@ module FacebookTestUsers
         end
       end
 
+      desc "nuke", "Remove all test users from an application. Use with care."
+      method_option "app", :aliases => %w[-a], :type => :string, :required => true, :banner => "Name of the app"
+
+      def nuke
+        app = find_app!(options[:app])
+        app.users.each(&:destroy)
+      end
+
       private
       def find_app!(name)
         app = App.find_by_name(options[:app])
