@@ -60,6 +60,23 @@ module FacebookTestUsers
         puts "Login URL:    #{user.login_url}"
       end
 
+      desc "friend", "Make two of an app's users friends"
+      method_option "app", :aliases => %w[-a], :type => :string, :required => true, :banner => "Name of the app"
+      method_option "user1", :aliases => %w[-1 -u1], :type => :string, :required => true, :banner => "ID of the first user"
+      method_option "user2", :aliases => %w[-2 -u2], :type => :string, :required => true, :banner => "ID of the second user"
+
+      def friend
+        app = find_app!(options[:app])
+        users = app.users
+        u1 = users.find {|u| u.id.to_s == options[:user1] } or raise ArgumentError, "No user found w/id #{options[:user1].inspect}"
+        u2 = users.find {|u| u.id.to_s == options[:user2] } or raise ArgumentError, "No user found w/id #{options[:user2].inspect}"
+
+        # the first request is just a request; the second request
+        # accepts the first request
+        u1.send_friend_request_to(u2)
+        u2.send_friend_request_to(u1)
+      end
+
       desc "rm", "Remove a test user from an application"
       method_option "app", :aliases => %w[-a], :type => :string, :required => true, :banner => "Name of the app"
       method_option "user", :banner => "ID of the user to remove", :aliases => %w[-u], :type => :string, :required => true

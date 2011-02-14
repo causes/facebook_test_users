@@ -6,7 +6,7 @@ module FacebookTestUsers
     attr_reader :name, :id, :secret
     
     def initialize(attrs)
-      @name, @id, @secret = attrs[:name], attrs[:id], attrs[:secret]
+      @name, @id, @secret = attrs[:name].to_s, attrs[:id].to_s, attrs[:secret].to_s
       validate!
     end
       
@@ -58,14 +58,14 @@ module FacebookTestUsers
       all.find {|a| a.name == name}
     end
 
+    def access_token
+      @access_token ||= AccessToken.get(id, secret)
+    end
+
     private
 
     def users_url
       GRAPH_API_BASE + "/#{id}/accounts/test-users"
-    end
-
-    def access_token
-      @access_token ||= AccessToken.get(id, secret)
     end
 
     def validate!
@@ -74,11 +74,11 @@ module FacebookTestUsers
       end
 
       unless id && id =~ /^[0-9a-f]+$/i
-        raise ArgumentError, "App id must be a nonempty hex string"
+        raise ArgumentError, "App id must be a nonempty hex string, but was #{id.inspect}"
       end
 
       unless secret && secret =~ /^[0-9a-f]+$/i
-        raise ArgumentError, "App secret must be a nonempty hex string"
+        raise ArgumentError, "App secret must be a nonempty hex string, but was #{secret.inspect}"
       end
     end
 

@@ -17,10 +17,20 @@ module FacebookTestUsers
       RestClient.delete(destroy_url)
     end
 
+    def send_friend_request_to(other)
+      RestClient.post(friend_request_url_for(other),
+        'access_token' => access_token.to_s)
+    end
+
     private
 
     def destroy_url
       GRAPH_API_BASE + "/#{id}?access_token=#{URI.escape(access_token.to_s)}"
     end
+
+    def friend_request_url_for(other)
+      GRAPH_API_BASE + "/#{id}/friends/#{other.id}"
+    end
+
   end
 end
